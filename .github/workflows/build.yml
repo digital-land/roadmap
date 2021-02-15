@@ -1,0 +1,81 @@
+name: Build pages
+
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'data/**'
+    branches:
+      - main
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+env:
+  DLB_BOT_EMAIL: ${{ secrets.DLB_BOT_EMAIL }}
+  DLB_BOT_TOKEN: ${{ secrets.DLB_BOT_TOKEN }}
+  DLB_BOT_USERNAME: ${{ secrets.DLB_BOT_USERNAME }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Notify slack started
+      id: slack
+      uses: digital-land/github-action-slack-notify-build@main
+      with:
+        channel: dl-github
+        status: STARTED
+        color: "#00DFFC"
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Setup git
+      run: |
+        git config user.email "${DLB_BOT_EMAIL}"
+        git config user.name "${DLB_BOT_USERNAME}"
+        git remote set-url origin https://${DLB_BOT_USERNAME}:${DLB_BOT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        git checkout main
+    - name: Update makerules
+      run: make makerules
+
+    - name: Commit updated makerules
+      run: make commit-makerules
+
+    - name: Install dependencies
+      run: make init
+
+    - name: Force rebuild of pages and dataset
+      run: make clobber
+
+    - name: Build docs
+      run: make render
+
+    - name: Commit docs
+      run: make commit-docs
+
+    - name: Notify slack success
+      if: success()
+      uses: digital-land/github-action-slack-notify-build@main
+      with:
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: dl-github
+        status: SUCCESS
+        color: good
+
+    - name: Notify slack fail
+      if: failure()
+      uses: digital-land/github-action-slack-notify-build@main
+      with:
+        message_id: ${{ steps.slack.outputs.message_id }}
+        channel: dl-github
+        status: FAILED
+        color: danger
