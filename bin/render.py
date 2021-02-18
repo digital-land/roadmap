@@ -26,7 +26,6 @@ def load_content(path):
     key = os.path.splitext(os.path.basename(path))[0]
     content[key] = item
 
-    print(item)
     for tag in item['attributes'].get('tags', []):
         tags.setdefault(tag, [])
         tags[tag].append(key)
@@ -57,7 +56,6 @@ if __name__ == "__main__":
     env.filters["stripp"] = stripp_filter
 
     load_content_directory(content_directory)
-    print(content)
 
     # index pages ..
     for path, template in [
