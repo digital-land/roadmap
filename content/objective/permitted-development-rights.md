@@ -5,6 +5,7 @@ summary: 'Collect and publish a list of permitted development rights'
 
 tags:
 - data-infrastructure
+- improving-data
 - objective
 - Up next
 ---
