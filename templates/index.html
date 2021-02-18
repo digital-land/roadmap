@@ -56,6 +56,21 @@
       </footer>
   </div>
 </div>
+
+<div class="govuk-grid-row">
+    {% for phase in ['Just done', 'Up next', 'Exploring']  %}
+    <div class="govuk-grid-column-one-third">
+        <h4 class="gem-c-heading govuk-heading-s   govuk-!-margin-bottom-4">{{ phase }}</h4>
+        <ul class="govuk-list govuk-list--bullet">
+            {%- for objective in tags['objective']  %}
+            {%- if goal in content[objective].attributes.tags and phase in content[objective].attributes.tags %}
+            <li>{{ content[objective].attributes.summary|markdown|stripp|safe }}</li>
+            {%- endif -%}
+            {%- endfor -%}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
 {% endfor %}
 
 <div class="govuk-grid-row">
