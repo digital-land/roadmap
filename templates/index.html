@@ -64,7 +64,10 @@
         <ul class="govuk-list govuk-list--bullet">
             {%- for objective in tags['objective']  %}
             {%- if goal in content[objective].attributes.tags and phase in content[objective].attributes.tags %}
-            <li>{{ content[objective].attributes.summary|markdown|stripp|safe }}</li>
+            <li>
+            [<a class="govuk-link read-more" href="objective/{{ objective }}">{{ objective }}</a>]<br>
+            {{ content[objective].attributes.summary|markdown|stripp|safe }}
+            </li>
             {%- endif -%}
             {%- endfor -%}
         </ul>
