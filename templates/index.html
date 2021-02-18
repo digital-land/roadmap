@@ -1,1 +1,85 @@
-{% extends "digital-land-frontend/page-per-thing/index.html" %}
+{% extends "digital-land-frontend/dlf-base.html" %}
+
+{%- block pageTitle -%}Roadmap | Digital Land{%- endblock pageTitle -%}
+
+{% block beforeContent %}
+  {% include 'digital-land-frontend/partials/dl-prototype-banner.html' %}
+  {% block dl_breadcrumbs %}
+  {{ govukBreadcrumbs({
+    "items": [
+      {
+        "text": "Digital Land",
+        "href": "https://digital-land.github.io/"
+      },
+      {
+        "text": "Roadmap"
+      }
+    ]
+  }) }}
+  {% endblock %}
+{% endblock %}
+
+{% block content %}
+<h1 class="govuk-heading-xl">Roadmap</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+  <p class="govuk-body">The current roadmap for the Digital Land team.</p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-bottom: 5px solid #0b0c0c;">
+      <header>
+        <h2 class="govuk-heading-l">What we’re working on</h2>
+      </header>
+  </div>
+</div>
+
+{% for goal in tags['goal']  %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <article class="blog-post blog-post-preview">
+      <header>
+        <h3 class="govuk-heading-m markdown-output govuk-!-margin-bottom-4">
+        {{ content[goal].attributes.summary|markdown|stripp|safe }}
+        </h3>
+      </header>
+      <footer class="entry-footer">
+        <ul class="govuk-list">
+            <li>
+            Read more about our goal to <a class="govuk-link read-more" href="goal/{{ goal }}">{{
+            content[goal].attributes.name[0]|lower}}{{
+            content[goal].attributes.name[1:]}}</a>.
+            </li>
+        </ul>
+      </footer>
+  </div>
+</div>
+{% endfor %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+<ul class="govuk-list">
+  <li>
+    <!-- should be /user, not /users -->
+    <a class="govuk-link" href="/users/">Users</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="goal/">Goals</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="objective/">Objectives</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/project/">Projects</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/dataset/">Datasets</a>
+  </li>
+</ul>
+  </div>
+</div>
+
+{% endblock %}
